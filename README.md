@@ -3,8 +3,15 @@
 [![npm version](https://badge.fury.io/js/react-sensitive-hide.svg)](https://badge.fury.io/js/react-sensitive-hide)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Online-blue)](https://lyesweb.github.io/react-sensitive-hide/)
 
 A lightweight React component for hiding sensitive inline text with blur, blackout, or CAPTCHA unlock mechanisms. Perfect for protecting sensitive information in user interfaces while maintaining a clean, accessible experience.
+
+**Keywords:** react, npm-package, safety, sensitive, content-protection, hide-text, kid-safe, protect-text
+
+## 🎮 Live Demo
+
+**[Try it out live!](https://lyesweb.github.io/react-sensitive-hide/)** - See all features in action with interactive examples.
 
 ## ✨ Features
 
