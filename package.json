@@ -3,34 +3,45 @@
   "version": "0.0.0",
   "description": "Lightweight React component for hiding sensitive inline text with blur, blackout, or CAPTCHA unlock.",
   "license": "MIT",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./styles.css": "./dist/index.css"
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.tsx --dts --format cjs,esm --out-dir dist",
+    "build": "tsup src/index.ts --dts --format cjs,esm --out-dir dist",
     "clean": "rimraf dist",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "prepare": "husky install",
-    "dev": "vite"
+    "dev": "cd example/demo-app && npm run dev"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "@eslint/js": "^9.38.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
+    "@vitejs/plugin-react": "^5.1.0",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "husky": "^9.1.7",
     "jsdom": "^27.0.1",
     "lint-staged": "^16.2.6",
@@ -50,7 +61,7 @@
     "react-dom": "^19.2.0"
   },
   "lint-staged": {
-  "*.{ts,tsx,js,jsx}": [
+    "*.{ts,tsx,js,jsx}": [
       "eslint --fix",
       "prettier --write"
     ],
