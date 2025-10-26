@@ -1,4 +1,3 @@
-import React from 'react';
 import { HideMe } from 'react-sensitive-hide';
 
 function App() {
