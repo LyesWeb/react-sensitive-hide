@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://github.com/LyesWeb/react-sensitive-hide#readme
+    about: Check the README and documentation for usage examples
+  - name: 🎮 Live Demo
+    url: https://lyesweb.github.io/react-sensitive-hide/
+    about: Try out the component with our interactive demo
+  - name: 💬 Discussions
+    url: https://github.com/LyesWeb/react-sensitive-hide/discussions
+    about: Ask questions and discuss ideas with the community
