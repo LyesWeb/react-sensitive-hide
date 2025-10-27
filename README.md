@@ -41,6 +41,7 @@ pnpm add react-sensitive-hide
 
 ```tsx
 import { HideMe } from 'react-sensitive-hide';
+import 'react-sensitive-hide/styles.css';
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
 
 ```tsx
 import { HideMe } from 'react-sensitive-hide';
+import 'react-sensitive-hide/styles.css';
 
 <p>
   Your password is <HideMe>super-secret-123</HideMe> and should be kept safe.
@@ -122,6 +124,12 @@ import { HideMe } from 'react-sensitive-hide';
 - **Accessibility** - Full keyboard navigation and screen reader support
 
 ## 🎨 Styling
+
+**Important:** Don't forget to import the CSS file in your application:
+
+```tsx
+import 'react-sensitive-hide/styles.css';
+```
 
 The component uses CSS custom properties for easy theming:
 
