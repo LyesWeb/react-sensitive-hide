@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import { HideMeProps } from './types';
