@@ -1,6 +1,6 @@
 {
   "name": "react-sensitive-hide",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Lightweight React component for hiding sensitive inline text with blur, blackout, or CAPTCHA unlock.",
   "license": "MIT",
   "main": "dist/index.js",
