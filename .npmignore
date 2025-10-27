@@ -1,0 +1,45 @@
+# Source files
+src/
+tests/
+example/
+
+# Configuration files
+eslint.config.js
+eslint.config.mjs
+eslint.config.ts
+vitest.config.ts
+commitlint.config.cjs
+tsconfig.json
+*.config.js
+*.config.ts
+
+# Development files
+.husky/
+.github/
+.eslintrc*
+.prettierrc
+.gitignore
+
+# Dependencies
+node_modules/
+
+# Build artifacts (optional, since dist is included in files array)
+# dist/ is explicitly included in package.json "files" array
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CI/CD
+.github/
+
+# Misc
+.env*
+*.log
