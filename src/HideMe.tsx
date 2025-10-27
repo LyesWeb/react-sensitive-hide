@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import classNames from 'classnames';
 import { HideMeProps } from './types';
 import './styles.css';
 
@@ -30,14 +31,17 @@ export const HideMe: React.FC<HideMeProps> = ({
   // If revealed, just show the content
   if (isRevealed) {
     return (
-      <span className={`hide-me hide-me--revealed ${className}`} style={style}>
+      <span 
+        className={classNames('hide-me', 'hide-me--revealed', className)} 
+        style={style}
+      >
         {children}
       </span>
     );
   }
 
-  // Build CSS classes
-  const classes = ['hide-me', 'hide-me--blur', className].filter(Boolean).join(' ');
+  // Build CSS classes using classNames
+  const classes = classNames('hide-me', 'hide-me--blur', className);
 
   // Build inline styles
   const inlineStyles = {
