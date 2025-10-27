@@ -40,6 +40,14 @@
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
+.hide-me--blackout {
+  filter: none;
+  background-color: #000;
+  color: #000;
+  text-shadow: none;
+  border-color: #000;
+}
+
 .hide-me--revealed {
   filter: none;
   background-color: transparent;

@@ -72,4 +72,19 @@ describe('HideMe Component', () => {
     const button = screen.getByRole('button');
     expect(button).toHaveStyle('--hide-me-blur-amount: 10px');
   });
+
+  it('applies blackout mode when blackOut is true', () => {
+    render(<HideMe blackOut={true}>Hidden content</HideMe>);
+    
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass('hide-me--blackout');
+    expect(button).toHaveAttribute('aria-label', 'Blacked out content. Click to reveal.');
+  });
+
+  it('shows blackout characters when blackOut is true', () => {
+    render(<HideMe blackOut={true}>Hidden content</HideMe>);
+    
+    const button = screen.getByRole('button');
+    expect(button).toHaveTextContent('████████');
+  });
 });

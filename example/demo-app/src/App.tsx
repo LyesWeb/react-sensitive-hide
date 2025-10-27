@@ -25,6 +25,23 @@ function App() {
         </section>
 
         <section className="section">
+          <h2>Blackout Mode</h2>
+          
+          <div className="example">
+            <h3>Basic Blackout</h3>
+            <p>
+              This text will be completely blacked out: 
+              <HideMe mode="blur" blackOut={true}>This text will be completely blacked out</HideMe>
+            </p>
+            <div className="code">
+{`<HideMe mode="blur" blackOut={true}>
+  This text will be completely blacked out
+</HideMe>`}
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
           <h2>CAPTCHA Mode</h2>
           
           <div className="example">

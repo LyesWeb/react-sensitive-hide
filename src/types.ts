@@ -9,4 +9,5 @@ export interface HideMeProps {
   style?: CSSProperties;
   mode?: 'blur' | 'captcha';
   captchaDifficulty?: CaptchaDifficulty;
+  blackOut?: boolean;
 }

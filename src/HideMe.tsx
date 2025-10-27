@@ -11,6 +11,7 @@ export const HideMe: React.FC<HideMeProps> = ({
   style = {},
   mode = 'blur',
   captchaDifficulty = 'easy',
+  blackOut = false,
 }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
@@ -125,7 +126,7 @@ export const HideMe: React.FC<HideMeProps> = ({
   // Build CSS classes using classNames
   const classes = classNames(
     'hide-me', 
-    mode === 'blur' ? 'hide-me--blur' : 'hide-me--captcha',
+    blackOut ? 'hide-me--blackout' : (mode === 'blur' ? 'hide-me--blur' : 'hide-me--captcha'),
     className
   );
 
@@ -135,7 +136,9 @@ export const HideMe: React.FC<HideMeProps> = ({
     '--hide-me-blur-amount': `${blurAmount}px`,
   };
 
-  const ariaLabel = mode === 'captcha' 
+  const ariaLabel = blackOut 
+    ? 'Blacked out content. Click to reveal.'
+    : mode === 'captcha' 
     ? 'Hidden content. Click to solve CAPTCHA and reveal.'
     : 'Hidden content. Click to reveal.';
 
@@ -153,7 +156,7 @@ export const HideMe: React.FC<HideMeProps> = ({
       <span className="sr-only">
         {ariaLabel}
       </span>
-      {mode === 'captcha' ? '••••••••' : children}
+      {blackOut ? '████████' : (mode === 'captcha' ? '••••••••' : children)}
     </button>
   );
 };
