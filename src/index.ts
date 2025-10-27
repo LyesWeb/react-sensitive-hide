@@ -1,2 +1,2 @@
 export { HideMe } from './HideMe';
-export type { HideMeProps } from './types';
+export type { HideMeProps, CaptchaDifficulty } from './types';

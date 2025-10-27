@@ -23,6 +23,49 @@ function App() {
             </div>
           </div>
         </section>
+
+        <section className="section">
+          <h2>CAPTCHA Mode</h2>
+          
+          <div className="example">
+            <h3>Easy Difficulty</h3>
+            <p>
+              This content requires solving a simple math problem to reveal: 
+              <HideMe mode="captcha" captchaDifficulty="easy">secret password: admin123</HideMe>
+            </p>
+            <div className="code">
+{`<HideMe mode="captcha" captchaDifficulty="easy">
+  secret password: admin123
+</HideMe>`}
+            </div>
+          </div>
+
+          <div className="example">
+            <h3>Medium Difficulty</h3>
+            <p>
+              Medium difficulty math problems: 
+              <HideMe mode="captcha" captchaDifficulty="medium">API key: xyz789</HideMe>
+            </p>
+            <div className="code">
+{`<HideMe mode="captcha" captchaDifficulty="medium">
+  API key: xyz789
+</HideMe>`}
+            </div>
+          </div>
+
+          <div className="example">
+            <h3>Hard Difficulty</h3>
+            <p>
+              Hard difficulty with more complex math: 
+              <HideMe mode="captcha" captchaDifficulty="hard">Database password: superSecret2024!</HideMe>
+            </p>
+            <div className="code">
+{`<HideMe mode="captcha" captchaDifficulty="hard">
+  Database password: superSecret2024!
+</HideMe>`}
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="footer">
