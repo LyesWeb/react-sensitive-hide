@@ -7,7 +7,7 @@
 
 **📦 [npm package](https://www.npmjs.com/package/react-sensitive-hide)**
 
-A lightweight React component for hiding sensitive inline text with blur, blackout, or CAPTCHA unlock mechanisms. Perfect for protecting sensitive information in user interfaces while maintaining a clean, accessible experience.
+A lightweight React component for hiding sensitive inline text (images comming soon) with blur, blackout, or CAPTCHA unlock mechanisms. Perfect for protecting sensitive information in user interfaces while maintaining a clean, accessible experience.
 
 **Keywords:** react, npm-package, safety, sensitive, content-protection, hide-text, kid-safe, protect-text
 
