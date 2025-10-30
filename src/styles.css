@@ -112,7 +112,7 @@
   overflow-y: auto;
 }
 
-.hide-me-captcha-content h3 {
+.hide-me-captcha-title {
   margin: 0 0 16px 0;
   font-size: 18px;
   font-weight: 600;

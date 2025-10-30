@@ -84,7 +84,7 @@ export const HideMe: React.FC<HideMeProps> = ({
       <div className="hide-me-captcha-overlay">
         <div className="hide-me-captcha-modal">
           <div className="hide-me-captcha-content">
-            <h3>Solve this math problem to reveal content:</h3>
+            <div className="hide-me-captcha-title">Solve this math problem to reveal content:</div>
             <div className="hide-me-captcha-question">
               What is {mathProblem.question}?
             </div>
