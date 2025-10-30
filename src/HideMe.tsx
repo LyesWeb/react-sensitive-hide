@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
+import React, { useCallback, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+import './styles.css';
 import { HideMeProps } from './types';
 import { generateMathProblem } from './utils/captcha';
-import './styles.css';
 
 export const HideMe: React.FC<HideMeProps> = ({
   children,
@@ -43,7 +44,7 @@ export const HideMe: React.FC<HideMeProps> = ({
       setShowCaptcha(false);
     } else {
       // Wrong answer, generate new problem
-      setProblemKey(prev => prev + 1);
+      setProblemKey((prev) => prev + 1);
       setUserAnswer('');
     }
   }, [mathProblem, userAnswer]);
@@ -53,13 +54,16 @@ export const HideMe: React.FC<HideMeProps> = ({
     setUserAnswer('');
   }, []);
 
-  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      if (isRevealed) return;
-      handleReveal();
-    }
-  }, [isRevealed, handleReveal]);
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (isRevealed) return;
+        handleReveal();
+      }
+    },
+    [isRevealed, handleReveal]
+  );
 
   // Don't render anything if no children
   if (!children) {
@@ -69,66 +73,65 @@ export const HideMe: React.FC<HideMeProps> = ({
   // If revealed, just show the content
   if (isRevealed) {
     return (
-      <span 
-        className={classNames('hide-me', 'hide-me--revealed', className)} 
-        style={style}
-      >
+      <span className={classNames('hide-me', 'hide-me--revealed', className)} style={style}>
         {children}
       </span>
     );
   }
 
-  // Show CAPTCHA modal
-  if (showCaptcha && mathProblem) {
-    return (
-      <div className="hide-me-captcha-overlay">
-        <div className="hide-me-captcha-modal">
-          <div className="hide-me-captcha-content">
-            <div className="hide-me-captcha-title">Solve this math problem to reveal content:</div>
-            <div className="hide-me-captcha-question">
-              What is {mathProblem.question}?
-            </div>
-            <div className="hide-me-captcha-input-group">
-              <input
-                type="number"
-                value={userAnswer}
-                onChange={(e) => setUserAnswer(e.target.value)}
-                placeholder="Your answer"
-                className="hide-me-captcha-input"
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleCaptchaSubmit();
-                  }
-                }}
-              />
-              <div className="hide-me-captcha-buttons">
-                <button
-                  type="button"
-                  onClick={handleCaptchaSubmit}
-                  className="hide-me-captcha-submit"
-                >
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCaptchaCancel}
-                  className="hide-me-captcha-cancel"
-                >
-                  Cancel
-                </button>
+  // Render CAPTCHA modal using portal (to avoid nesting issues with <p> tags)
+  const captchaModal =
+    showCaptcha && mathProblem && typeof document !== 'undefined'
+      ? createPortal(
+          <div className="hide-me-captcha-overlay">
+            <div className="hide-me-captcha-modal">
+              <div className="hide-me-captcha-content">
+                <div className="hide-me-captcha-title">
+                  Solve this math problem to reveal content:
+                </div>
+                <div className="hide-me-captcha-question">What is {mathProblem.question}?</div>
+                <div className="hide-me-captcha-input-group">
+                  <input
+                    type="number"
+                    value={userAnswer}
+                    onChange={(e) => setUserAnswer(e.target.value)}
+                    placeholder="Your answer"
+                    className="hide-me-captcha-input"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleCaptchaSubmit();
+                      }
+                    }}
+                  />
+                  <div className="hide-me-captcha-buttons">
+                    <button
+                      type="button"
+                      onClick={handleCaptchaSubmit}
+                      className="hide-me-captcha-submit"
+                    >
+                      Submit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCaptchaCancel}
+                      className="hide-me-captcha-cancel"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+          </div>,
+          document.body
+        )
+      : null;
 
   // Build CSS classes using classNames
   const classes = classNames(
-    'hide-me', 
-    blackOut ? 'hide-me--blackout' : (mode === 'blur' ? 'hide-me--blur' : 'hide-me--captcha'),
+    'hide-me',
+    blackOut ? 'hide-me--blackout' : mode === 'blur' ? 'hide-me--blur' : 'hide-me--captcha',
     className
   );
 
@@ -138,27 +141,28 @@ export const HideMe: React.FC<HideMeProps> = ({
     '--hide-me-blur-amount': `${blurAmount}px`,
   };
 
-  const ariaLabel = blackOut 
+  const ariaLabel = blackOut
     ? 'Blacked out content. Click to reveal.'
-    : mode === 'captcha' 
-    ? 'Hidden content. Click to solve CAPTCHA and reveal.'
-    : 'Hidden content. Click to reveal.';
+    : mode === 'captcha'
+      ? 'Hidden content. Click to solve CAPTCHA and reveal.'
+      : 'Hidden content. Click to reveal.';
 
   return (
-    <button
-      type="button"
-      className={classes}
-      style={inlineStyles}
-      onClick={handleReveal}
-      onKeyDown={handleKeyDown}
-      aria-label={ariaLabel}
-      aria-expanded={isRevealed}
-      tabIndex={0}
-    >
-      <span className="sr-only">
-        {ariaLabel}
-      </span>
-      {blackOut ? '████████' : (mode === 'captcha' ? '••••••••' : children)}
-    </button>
+    <>
+      <button
+        type="button"
+        className={classes}
+        style={inlineStyles}
+        onClick={handleReveal}
+        onKeyDown={handleKeyDown}
+        aria-label={ariaLabel}
+        aria-expanded={isRevealed}
+        tabIndex={0}
+      >
+        <span className="sr-only">{ariaLabel}</span>
+        {blackOut ? '████████' : mode === 'captcha' ? '••••••••' : children}
+      </button>
+      {captchaModal}
+    </>
   );
 };
