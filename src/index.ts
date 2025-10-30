@@ -1,2 +1,5 @@
+// Import styles to ensure they're bundled
+import './styles.css';
+
 export { HideMe } from './HideMe';
-export type { HideMeProps, CaptchaDifficulty } from './types';
+export type { CaptchaDifficulty, HideMeProps } from './types';
