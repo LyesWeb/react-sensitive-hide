@@ -87,4 +87,156 @@ describe('HideMe Component', () => {
     const button = screen.getByRole('button');
     expect(button).toHaveTextContent('████████');
   });
+
+  describe('Age Verification Mode', () => {
+    it('renders age verification mode correctly', () => {
+      render(<HideMe mode="age-verification">Age-restricted content</HideMe>);
+      
+      const button = screen.getByRole('button');
+      expect(button).toHaveClass('hide-me--age-verification');
+      expect(button).toHaveAttribute('aria-label', 'Age-restricted content. Click to verify your age.');
+    });
+
+    it('shows age verification modal on click', () => {
+      render(<HideMe mode="age-verification">Age-restricted content</HideMe>);
+      
+      fireEvent.click(screen.getByRole('button'));
+      
+      expect(screen.getByText('Age Verification Required')).toBeInTheDocument();
+      expect(screen.getByText(/Please enter your date of birth/)).toBeInTheDocument();
+    });
+
+    it('reveals content when valid age is entered (18+)', () => {
+      render(<HideMe mode="age-verification" minimumAge={18}>Age-restricted content</HideMe>);
+      
+      // Click to show modal
+      fireEvent.click(screen.getByRole('button', { name: /Age-restricted content/ }));
+      
+      // Enter a valid birth date (25 years ago)
+      const twentyFiveYearsAgo = new Date();
+      twentyFiveYearsAgo.setFullYear(twentyFiveYearsAgo.getFullYear() - 25);
+      const dateString = twentyFiveYearsAgo.toISOString().split('T')[0];
+      
+      const dateInput = screen.getByDisplayValue('');
+      fireEvent.change(dateInput, { target: { value: dateString } });
+      
+      // Click verify button
+      fireEvent.click(screen.getByRole('button', { name: 'Verify' }));
+      
+      // Content should be revealed
+      expect(screen.getByText('Age-restricted content')).toBeInTheDocument();
+    });
+
+    it('shows error when age is below minimum', () => {
+      render(<HideMe mode="age-verification" minimumAge={18}>Age-restricted content</HideMe>);
+      
+      // Click to show modal
+      fireEvent.click(screen.getByRole('button', { name: /Age-restricted content/ }));
+      
+      // Enter an invalid birth date (16 years ago)
+      const sixteenYearsAgo = new Date();
+      sixteenYearsAgo.setFullYear(sixteenYearsAgo.getFullYear() - 16);
+      const dateString = sixteenYearsAgo.toISOString().split('T')[0];
+      
+      const dateInput = screen.getByDisplayValue('');
+      fireEvent.change(dateInput, { target: { value: dateString } });
+      
+      // Click verify button
+      fireEvent.click(screen.getByRole('button', { name: 'Verify' }));
+      
+      // Error should be shown
+      expect(screen.getByText('You must be at least 18 years old to view this content')).toBeInTheDocument();
+    });
+
+    it('shows error when no date is entered', () => {
+      render(<HideMe mode="age-verification">Age-restricted content</HideMe>);
+      
+      // Click to show modal
+      fireEvent.click(screen.getByRole('button', { name: /Age-restricted content/ }));
+      
+      // Click verify without entering a date
+      fireEvent.click(screen.getByRole('button', { name: 'Verify' }));
+      
+      // Error should be shown
+      expect(screen.getByText('Please enter your date of birth')).toBeInTheDocument();
+    });
+
+    it('shows error when future date is entered', () => {
+      render(<HideMe mode="age-verification">Age-restricted content</HideMe>);
+      
+      // Click to show modal
+      fireEvent.click(screen.getByRole('button', { name: /Age-restricted content/ }));
+      
+      // Enter a future date
+      const futureDate = new Date();
+      futureDate.setFullYear(futureDate.getFullYear() + 1);
+      const dateString = futureDate.toISOString().split('T')[0];
+      
+      const dateInput = screen.getByDisplayValue('');
+      fireEvent.change(dateInput, { target: { value: dateString } });
+      
+      // Click verify button
+      fireEvent.click(screen.getByRole('button', { name: 'Verify' }));
+      
+      // Error should be shown
+      expect(screen.getByText('Date of birth cannot be in the future')).toBeInTheDocument();
+    });
+
+    it('closes modal when cancel is clicked', () => {
+      render(<HideMe mode="age-verification">Age-restricted content</HideMe>);
+      
+      // Click to show modal
+      fireEvent.click(screen.getByRole('button', { name: /Age-restricted content/ }));
+      
+      expect(screen.getByText('Age Verification Required')).toBeInTheDocument();
+      
+      // Click cancel
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      
+      // Modal should be closed
+      expect(screen.queryByText('Age Verification Required')).not.toBeInTheDocument();
+    });
+
+    it('respects custom minimumAge prop', () => {
+      render(<HideMe mode="age-verification" minimumAge={21}>Age-restricted content</HideMe>);
+      
+      // Click to show modal
+      fireEvent.click(screen.getByRole('button', { name: /Age-restricted content/ }));
+      
+      expect(screen.getByText(/at least 21 years old/)).toBeInTheDocument();
+      
+      // Enter a birth date that makes user 20 years old
+      const twentyYearsAgo = new Date();
+      twentyYearsAgo.setFullYear(twentyYearsAgo.getFullYear() - 20);
+      const dateString = twentyYearsAgo.toISOString().split('T')[0];
+      
+      const dateInput = screen.getByDisplayValue('');
+      fireEvent.change(dateInput, { target: { value: dateString } });
+      
+      // Click verify button
+      fireEvent.click(screen.getByRole('button', { name: 'Verify' }));
+      
+      // Error should be shown with custom age
+      expect(screen.getByText('You must be at least 21 years old to view this content')).toBeInTheDocument();
+    });
+
+    it('clears error when date input changes', () => {
+      render(<HideMe mode="age-verification">Age-restricted content</HideMe>);
+      
+      // Click to show modal
+      fireEvent.click(screen.getByRole('button', { name: /Age-restricted content/ }));
+      
+      // Click verify without entering a date to trigger error
+      fireEvent.click(screen.getByRole('button', { name: 'Verify' }));
+      
+      expect(screen.getByText('Please enter your date of birth')).toBeInTheDocument();
+      
+      // Now enter a date
+      const dateInput = screen.getByDisplayValue('');
+      fireEvent.change(dateInput, { target: { value: '2000-01-01' } });
+      
+      // Error should be cleared
+      expect(screen.queryByText('Please enter your date of birth')).not.toBeInTheDocument();
+    });
+  });
 });

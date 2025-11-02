@@ -5,6 +5,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './styles.css';
 import { HideMeProps } from './types';
+import { isAgeValid } from './utils/ageValidation';
 import { generateMathProblem } from './utils/captcha';
 
 export const HideMe: React.FC<HideMeProps> = ({
@@ -15,11 +16,15 @@ export const HideMe: React.FC<HideMeProps> = ({
   mode = 'blur',
   captchaDifficulty = 'easy',
   blackOut = false,
+  minimumAge = 18,
 }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
   const [showCaptcha, setShowCaptcha] = useState(false);
   const [problemKey, setProblemKey] = useState(0);
+  const [showAgeModal, setShowAgeModal] = useState(false);
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [ageError, setAgeError] = useState('');
 
   // Generate math problem using useMemo
   const mathProblem = useMemo(() => {
@@ -33,6 +38,8 @@ export const HideMe: React.FC<HideMeProps> = ({
   const handleReveal = useCallback(() => {
     if (mode === 'captcha') {
       setShowCaptcha(true);
+    } else if (mode === 'age-verification') {
+      setShowAgeModal(true);
     } else {
       setIsRevealed(true);
     }
@@ -52,6 +59,42 @@ export const HideMe: React.FC<HideMeProps> = ({
   const handleCaptchaCancel = useCallback(() => {
     setShowCaptcha(false);
     setUserAnswer('');
+  }, []);
+
+  const handleAgeSubmit = useCallback(() => {
+    if (!dateOfBirth) {
+      setAgeError('Please enter your date of birth');
+      return;
+    }
+
+    const birthDate = new Date(dateOfBirth);
+
+    // Check if date is valid
+    if (isNaN(birthDate.getTime())) {
+      setAgeError('Please enter a valid date');
+      return;
+    }
+
+    // Check if date is in the future
+    if (birthDate > new Date()) {
+      setAgeError('Date of birth cannot be in the future');
+      return;
+    }
+
+    if (isAgeValid(birthDate, minimumAge)) {
+      setIsRevealed(true);
+      setShowAgeModal(false);
+      setAgeError('');
+      setDateOfBirth('');
+    } else {
+      setAgeError(`You must be at least ${minimumAge} years old to view this content`);
+    }
+  }, [dateOfBirth, minimumAge]);
+
+  const handleAgeCancel = useCallback(() => {
+    setShowAgeModal(false);
+    setDateOfBirth('');
+    setAgeError('');
   }, []);
 
   const handleKeyDown = useCallback(
@@ -128,10 +171,60 @@ export const HideMe: React.FC<HideMeProps> = ({
         )
       : null;
 
+  // Render Age Verification modal using portal
+  const ageModal =
+    showAgeModal && typeof document !== 'undefined'
+      ? createPortal(
+          <div className="hide-me-age-overlay">
+            <div className="hide-me-age-modal">
+              <div className="hide-me-age-content">
+                <div className="hide-me-age-title">Age Verification Required</div>
+                <div className="hide-me-age-description">
+                  Please enter your date of birth to verify you are at least {minimumAge} years old.
+                </div>
+                <div className="hide-me-age-input-group">
+                  <input
+                    type="date"
+                    value={dateOfBirth}
+                    onChange={(e) => {
+                      setDateOfBirth(e.target.value);
+                      setAgeError('');
+                    }}
+                    className="hide-me-age-input"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleAgeSubmit();
+                      }
+                    }}
+                  />
+                  {ageError && <div className="hide-me-age-error">{ageError}</div>}
+                  <div className="hide-me-age-buttons">
+                    <button type="button" onClick={handleAgeSubmit} className="hide-me-age-submit">
+                      Verify
+                    </button>
+                    <button type="button" onClick={handleAgeCancel} className="hide-me-age-cancel">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )
+      : null;
+
   // Build CSS classes using classNames
   const classes = classNames(
     'hide-me',
-    blackOut ? 'hide-me--blackout' : mode === 'blur' ? 'hide-me--blur' : 'hide-me--captcha',
+    blackOut
+      ? 'hide-me--blackout'
+      : mode === 'blur'
+        ? 'hide-me--blur'
+        : mode === 'age-verification'
+          ? 'hide-me--age-verification'
+          : 'hide-me--captcha',
     className
   );
 
@@ -145,7 +238,9 @@ export const HideMe: React.FC<HideMeProps> = ({
     ? 'Blacked out content. Click to reveal.'
     : mode === 'captcha'
       ? 'Hidden content. Click to solve CAPTCHA and reveal.'
-      : 'Hidden content. Click to reveal.';
+      : mode === 'age-verification'
+        ? 'Age-restricted content. Click to verify your age.'
+        : 'Hidden content. Click to reveal.';
 
   return (
     <>
@@ -160,9 +255,16 @@ export const HideMe: React.FC<HideMeProps> = ({
         tabIndex={0}
       >
         <span className="sr-only">{ariaLabel}</span>
-        {blackOut ? '████████' : mode === 'captcha' ? '••••••••' : children}
+        {blackOut
+          ? '████████'
+          : mode === 'captcha'
+            ? '••••••••'
+            : mode === 'age-verification'
+              ? '••••••••'
+              : children}
       </button>
       {captchaModal}
+      {ageModal}
     </>
   );
 };

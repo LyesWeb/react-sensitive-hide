@@ -7,7 +7,8 @@ export interface HideMeProps {
   blurAmount?: number;
   className?: string;
   style?: CSSProperties;
-  mode?: 'blur' | 'captcha';
+  mode?: 'blur' | 'captcha' | 'age-verification';
   captchaDifficulty?: CaptchaDifficulty;
   blackOut?: boolean;
+  minimumAge?: number;
 }

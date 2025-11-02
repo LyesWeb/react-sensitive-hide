@@ -83,6 +83,36 @@ function App() {
             </div>
           </div>
         </section>
+
+        <section className="section">
+          <h2>Age Verification Mode</h2>
+          
+          <div className="example">
+            <h3>Default Age Verification (18+)</h3>
+            <p>
+              This content requires age verification: 
+              <HideMe mode="age-verification">Adult content for 18+ users</HideMe>
+            </p>
+            <div className="code">
+{`<HideMe mode="age-verification">
+  Adult content for 18+ users
+</HideMe>`}
+            </div>
+          </div>
+
+          <div className="example">
+            <h3>Custom Minimum Age (21+)</h3>
+            <p>
+              This content requires you to be 21 or older: 
+              <HideMe mode="age-verification" minimumAge={21}>Content for 21+ users only</HideMe>
+            </p>
+            <div className="code">
+{`<HideMe mode="age-verification" minimumAge={21}>
+  Content for 21+ users only
+</HideMe>`}
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="footer">
