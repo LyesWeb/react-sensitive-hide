@@ -23,7 +23,7 @@ function App() {
     <div className="container">
       <header className="header">
         <h1>🔒 React Sensitive Hide</h1>
-        <p>Hide sensitive text with blur, blackout, or CAPTCHA protection</p>
+        <p>Hide sensitive text with blur, blackout, CAPTCHA, or age verification protection</p>
       </header>
 
       <main>
